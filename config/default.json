@@ -1,0 +1,8 @@
+{
+  "ServiceName": "Seed",
+  "DefaultPort": "8080",
+  "Logstash": {
+    "Host": "logstash.rapidapi.cloud",
+    "Port": "28777"
+  }
+}

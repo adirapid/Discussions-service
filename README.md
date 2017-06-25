@@ -1,4 +1,4 @@
-## NodeJS Seed Project
+## Discussions service
 
 ### Contains:
 - Express

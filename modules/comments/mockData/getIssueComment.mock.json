@@ -1,0 +1,14 @@
+{
+  "id":0,
+  "body": "this is my comment",
+  "issueId":1,
+  "userId": 2,
+  "top": false,
+  "rating": 20,
+  "User": {
+    "id": 2,
+    "thumbnail": "thumbnail.path",
+    "name": "adi",
+    "username": "adi"
+  }
+}

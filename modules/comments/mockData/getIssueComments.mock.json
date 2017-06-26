@@ -1,0 +1,30 @@
+[
+  {
+    "id": 0,
+    "body": "this is my comment 1",
+    "issueId":1,
+    "userId": 2,
+    "top": false,
+    "rating": 20,
+    "User": {
+      "id": 2,
+      "thumbnail": "thumbnail.path",
+      "name": "adi",
+      "username": "adi"
+    }
+  },
+  {
+    "id": 1,
+    "body": "this is my comment 2",
+    "issueId":1,
+    "userId": 3,
+    "top": false,
+    "rating": 20,
+    "User": {
+      "id": 3,
+      "thumbnail": "thumbnail.path",
+      "name": "adi2",
+      "username": "adi2"
+    }
+  }
+]

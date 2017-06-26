@@ -25,6 +25,7 @@
     "radix": 0,
     "no-loops/no-loops": 1,
     "no-prototype-builtins": 0,
-    "no-multi-spaces": [2, { "exceptions": { "VariableDeclarator": true } }]
+    "no-multi-spaces": [2, { "exceptions": { "VariableDeclarator": true } }],
+    "import/no-extraneous-dependencies": [2, {"devDependencies": true}]
   }
 }

@@ -1,0 +1,28 @@
+{
+  "result": {
+    "id": 1,
+    "issueId": 1,
+    "userId": 5,
+    "body": "com1",
+    "top": true,
+    "rating": 0,
+    "status": "active",
+    "createdAt": "2017-05-14T08:31:29.000Z",
+    "updatedAt": "2017-06-27T12:59:38.000Z"
+  },
+  "response": {
+    "data":{
+      "id": 1,
+      "issueId": 1,
+      "userId": 5,
+      "body": "com1",
+      "top": true,
+      "rating": 0,
+      "status": "active",
+      "createdAt": "2017-05-14T08:31:29.000Z",
+      "updatedAt": "2017-06-27T12:59:38.000Z"
+    },
+    "total":1,
+    "took": 30
+  }
+}

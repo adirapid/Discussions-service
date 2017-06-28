@@ -1,0 +1,57 @@
+{
+  "result": {
+    "rows": [
+      {
+        "id": 1,
+        "issueId": 1,
+        "userId": 8,
+        "body": "this is my comment",
+        "top": false,
+        "rating": 0,
+        "status": "deleted",
+        "createdAt": "2017-06-26T12:40:47.000Z",
+        "updatedAt": "2017-06-26T12:44:54.000Z"
+      },
+      {
+        "id": 2,
+        "issueId": 1,
+        "userId": 8,
+        "body": "this is my comment",
+        "top": false,
+        "rating": 0,
+        "status": "deleted",
+        "createdAt": "2017-06-26T12:40:47.000Z",
+        "updatedAt": "2017-06-26T12:44:54.000Z"
+      }
+    ],
+    "count": 2
+  },
+  "response": {
+    "data": [
+      {
+        "id": 1,
+        "issueId": 1,
+        "userId": 8,
+        "body": "this is my comment",
+        "top": false,
+        "rating": 0,
+        "status": "deleted",
+        "createdAt": "2017-06-26T12:40:47.000Z",
+        "updatedAt": "2017-06-26T12:44:54.000Z"
+      },
+      {
+        "id": 2,
+        "issueId": 1,
+        "userId": 8,
+        "body": "this is my comment",
+        "top": false,
+        "rating": 0,
+        "status": "deleted",
+        "createdAt": "2017-06-26T12:40:47.000Z",
+        "updatedAt": "2017-06-26T12:44:54.000Z"
+      }
+    ],
+    "total": 2,
+    "took": 1
+  }
+}

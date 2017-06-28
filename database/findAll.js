@@ -2,9 +2,9 @@ const models    = require("../models");
 
 module.exports = async function (modelName, whereQuery = {},
   needRaw = false, offset = 0,
-  limit = 0, order = [], include = []) {
+  limit = 0, sort = [], include = []) {
   try {
-    const orderArr = (typeof order === "string") ? JSON.parse(order) : order;
+    const sortArr = (typeof sort === "string") ? JSON.parse(sort) : sort;
     const includeArr = (typeof include === "string") ? JSON.parse(include) : include;
     const model = models[modelName];
     const res = await model.findAndCountAll({
@@ -12,7 +12,7 @@ module.exports = async function (modelName, whereQuery = {},
       raw: needRaw,
       offset,
       limit,
-      order: orderArr,
+      order: sortArr,
       include: includeArr,
     });
     return res;

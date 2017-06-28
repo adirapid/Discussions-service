@@ -1,5 +1,9 @@
 
 module.exports = async function (decrementObj, decrementedField) {
-  const res = await decrementObj.decrement(decrementedField);
-  return res;
+  try {
+    const res = await decrementObj.decrement(decrementedField);
+    return res;
+  } catch (err) {
+    return err.message;
+  }
 };

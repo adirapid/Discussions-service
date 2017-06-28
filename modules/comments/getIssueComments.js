@@ -19,7 +19,6 @@ module.exports = async function (req, res) {
   const startTime = Date.now();
   const { issueId } = req.params;
   const { sort, offset, limit } =  req.query;
-
   const limitParse = parseInt(limit) || 5; // fix and check user params!
   const offsetParse = parseInt(offset) || 0;
   const query = { issueId, status: "active" };

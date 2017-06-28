@@ -19,15 +19,7 @@ describe("GET Issue's comments", () => {
   });
   it("should return all issue comments /v2/issue/:issueId/comments GET", (done) => {
     chai.request(server)
-      .get("/v2/issue/1/comments")
-      .send({
-        limit: 2,
-        offset: 1,
-        sort: [
-          ["top", "DESC"],
-          ["rating", "DESC"]
-        ],
-      })
+      .get("/v2/issue/1/comments?limit=2&offset=1&sort=[['top', 'DESC'],['rating', 'DESC']]")
       .end((err, res) => {
         const areEquals = equal(data.response.data, res.body.data);
         res.should.have.status(200);

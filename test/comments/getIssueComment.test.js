@@ -4,13 +4,13 @@ const { chai, chaiHttp, equal, sinon, server, Database, should }  = require("../
 
 chai.use(chaiHttp);
 
-const data = require("../../modules/comments/mockData/getIssueComment.mock.json");
+const data = require("./mockData/getIssueComment.mock.json");
 
 describe("GET comment of an issue", () => {
   let findOne;
 
   before((done) => {
-    findOne = sinon.stub(Database, "findOne").returns(new Promise(resolve => resolve(data)));
+    findOne = sinon.stub(Database, "findOne").returns(new Promise(resolve => resolve(data.result)));
     done();
   });
 
@@ -19,13 +19,14 @@ describe("GET comment of an issue", () => {
     done();
   });
 
-  it("should return specific comment by issue /issue/:issueId/comment/:commentId GET", (done) => {
+  it("should return specific comment by issue /v2/issue/:issueId/comment/:commentId GET", (done) => {
     chai.request(server)
-      .get("/issue/0/comment/0")
+      .get("/v2/issue/0/comment/0")
       .end((err, res) => {
-        const areEquals = equal(data, res.body);
+        const areEquals = equal(data.response.data, res.body.data);
         res.should.have.status(200);
         areEquals.should.be.equal(true);
+        res.body.total.should.be.equal(1);
         sinon.assert.calledOnce(findOne);
         done();
       });

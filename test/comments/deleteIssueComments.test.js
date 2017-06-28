@@ -3,7 +3,7 @@ const { chai, chaiHttp, equal, sinon, server, Database, should }  = require("../
 
 chai.use(chaiHttp);
 
-const data = require("../../modules/comments/mockData/deleteIssueComments.mock.json");
+const data = require("./mockData/deleteIssueComments.mock.json");
 
 describe("Delete all isuse's comments", () => {
   let update;
@@ -11,7 +11,7 @@ describe("Delete all isuse's comments", () => {
   let destroy;
 
   before((done) => {
-    findAll = sinon.stub(Database, "findAll").returns(new Promise(resolve => resolve([])));
+    findAll = sinon.stub(Database, "findAll").returns(new Promise(resolve => resolve({ count: 1, rows: [] })));
     update = sinon.stub(Database, "update");
     destroy = sinon.stub(Database, "destroy");
     done();
@@ -24,12 +24,12 @@ describe("Delete all isuse's comments", () => {
     done();
   });
 
-  it("should return the id of the issue /issue/:issueId/comments DELETE", (done) => {
+  it("should return the id of the issue. /v2/issue/:issueId/comments DELETE", (done) => {
     chai.request(server)
-      .delete("/issue/2/comments")
+      .delete("/v2/issue/2/comments")
       .end((err, res) => {
         const areEquals = equal(data, res.body);
-        res.should.have.status(200);
+        res.should.have.status(204);
         areEquals.should.be.equal(true);
         sinon.assert.calledOnce(findAll);
         sinon.assert.calledOnce(update);

@@ -1,21 +1,34 @@
 /* eslint-disable no-unused-vars, no-undef */
-const chai      = require("chai");
-const chaiHttp  = require("chai-http");
-const server    = require("../../index");
+const { chai, chaiHttp, equal, sinon, server, Database, should }  = require("../requiredmodules");
 
-const should    = chai.should();
 chai.use(chaiHttp);
 
+const data = require("./mockData/updateComment.mock.json");
+
 describe("Update comment", () => {
-  it("should return the comment id - /issue/:issueIs/comment/:commentId PUT", (done) => {
+  let update;
+
+  before((done) => {
+    update = sinon.stub(Database, "update").returns(new Promise(resolve => resolve([1])));
+    done();
+  });
+
+  after((done) => {
+    update.restore();
+    done();
+  });
+
+  it("should return the comment id - /v2/issue/:issueIs/comment/:commentId PATCH", (done) => {
     chai.request(server)
-      .put("/issue/1/comment/2")
+      .patch("/v2/issue/1/comment/2")
       .send({
         body: "this is my updated comment",
       })
       .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.have.property("id");
+        const areEquals = equal(data, res.body);
+        areEquals.should.be.equal(true);
+        res.should.have.status(204);
+        sinon.assert.calledOnce(update);
         done();
       });
   });

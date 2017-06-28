@@ -3,7 +3,7 @@ const { chai, chaiHttp, equal, sinon, server, Database, should }  = require("../
 
 chai.use(chaiHttp);
 
-const data = require("../../modules/comments/mockData/postComment.mock.json");
+const data = require("./mockData/postComment.mock.json");
 
 describe("Post comment to issue", () => {
   let create;
@@ -11,7 +11,7 @@ describe("Post comment to issue", () => {
   let increment;
 
   before((done) => {
-    create = sinon.stub(Database, "create").returns(new Promise(resolve => resolve(data)));
+    create = sinon.stub(Database, "create").returns(new Promise(resolve => resolve(data.result)));
     findOne = sinon.stub(Database, "findOne").returns(new Promise(resolve => resolve([])));
     increment = sinon.stub(Database, "increment");
     done();
@@ -24,17 +24,18 @@ describe("Post comment to issue", () => {
     done();
   });
 
-  it("should return the new comment /issue/:issueId/comment Post", (done) => {
+  it("should return the new comment /v/issue/:issueId/comment Post", (done) => {
     chai.request(server)
-      .post("/issue/1/comment")
+      .post("/v2/issue/1/comment")
       .send({
         body: "this is my comment",
         userId: 2,
       })
       .end((err, res) => {
-        const areEquals = equal(data, res.body);
-        res.should.have.status(200);
+        const areEquals = equal(data.response.data, res.body.data);
+        res.should.have.status(201);
         areEquals.should.be.equal(true);
+        res.body.total.should.be.equal(1);
         sinon.assert.calledOnce(create);
         sinon.assert.calledOnce(findOne);
         sinon.assert.calledOnce(increment);

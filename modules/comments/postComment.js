@@ -8,7 +8,7 @@
  * <p></p>
  */
 
-const Database = require("../../database");
+const Database        = require("../../database");
 const getErrResponse  = require("../../utils/getErrResponse");
 const logger          = require("../../utils/logger");
 

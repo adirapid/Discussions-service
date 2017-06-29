@@ -23,7 +23,7 @@ module.exports = async function (req, res) {
   const offsetParse = parseInt(offset) || 0;
   const query = { issueId, status: "active" };
   try {
-    const comments = await Database.findAll("Comments", query, false, limitParse, offsetParse, sort);
+    const comments = await Database.findAll("Comments", query, false, offsetParse, limitParse, sort);
     if (typeof comments === "object") {
       if (comments.count > 0) { // comments were found
         res.status(200).send({ data: comments.rows, took: (Date.now() - startTime), total: comments.count });

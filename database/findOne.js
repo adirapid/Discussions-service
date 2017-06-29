@@ -1,10 +1,12 @@
 const models    = require("../models");
 
-module.exports = async function (modelName, whereQuery) {
+module.exports = async function (modelName, whereQuery, include = [], sort = []) {
   try {
     const model = models[modelName];
     const res = await model.findOne({
-      where: whereQuery
+      where: whereQuery,
+      include,
+      order: sort
     });
     return res;
   } catch (err) {

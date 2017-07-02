@@ -1,11 +1,11 @@
 /**
- * @function setTopComment
- * @memberOf comments
- * @param issueId the issue id
- * @param commentId the comment id
- * @description set a comment to be top
- * <p><i> PATCH /issue/:issueId/topComment/:commentId </i></p>
- * @returns res contains the comment id.
+ * @function deleteIssue
+ * @memberOf Issues
+ * @param issueId The issue id.
+ * @param userId The user id. (optional)
+ * @description Delete the issue from the database, and remove all its comments and rates.
+ * <p><i> DELETE /v2/issue/:issueId/:userId? </i></p>
+ * @returns res contains the issue id that was removed.
  * <p></p>
  */
 
@@ -15,20 +15,23 @@ const logger          = require("../../utils/logger");
 
 module.exports = async function (req, res) {
   const startTime = Date.now();
-  const { issueId, commentId } = req.params;
+  const { issueId } = req.params;
   try {
-    await Database.update("Comments", { issueId, status: "active" }, { top: false });
-    const update = await Database.update("Comments", { issueId, id: commentId, status: "active" }, { top: true });
-    if (update[0] > 0) { // updated top
+    const destroy = await Database.update("Issues", { id: issueId, status: "active" }, { status: "deleted" });
+    if (destroy[0] === 1) { // issue was deleted
+      const comments = await Database.findAll("Comments", { issueId, status: "active" }, true);
+      const commentIds = comments.rows.map(comment => comment.id);
+      await Database.update("Comments", { issueId, status: "active" }, { status: "deleted" });
+      await Database.destroy("Votes", { type: "issue", typeId: issueId });
+      await Database.destroy("Votes", { type: "comment", typeId: { $in: commentIds } });
       res.status(204).send();
-    } else { // comment not found
+    } else { // no issue found
       const errResponse = getErrResponse({ status: 404,
         source: req.url,
         title: "Not Found",
-        details: "comment doesn't exists"
-      });
+        details: "issue doesn't exists" });
       res.status(404).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-      logger.error(`comment with id ${commentId} doesn't exists`);
+      logger.error(`issue with id ${issueId} and doesn't exists`);
     }
   } catch (err) {
     if (err.name === "db error") {
@@ -43,3 +46,4 @@ module.exports = async function (req, res) {
     }
   }
 };
+

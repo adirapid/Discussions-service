@@ -3,29 +3,36 @@ const { chai, chaiHttp, equal, sinon, server, Database, should }  = require("../
 
 chai.use(chaiHttp);
 
-const data = require("./mockData/getIssueComments.mock.json");
+const data  = require("./mockData/postIssue.mock.json");
 
-describe("GET Issue's comments", () => {
-  let findAll;
+describe("post a new issue", () => {
+  let create;
 
   before((done) => {
-    findAll = sinon.stub(Database, "findAll").returns(new Promise(resolve => resolve(data.result)));
+    create = sinon.stub(Database, "create").returns(new Promise(resolve => resolve(data.result)));
     done();
   });
 
   after((done) => {
-    findAll.restore();
+    create.restore();
     done();
   });
-  it("should return all issue comments /v2/issue/:issueId/comments GET", (done) => {
+
+  it("should return the new issue /v2/issue Post", (done) => {
     chai.request(server)
-      .get("/v2/issue/1/comments?limit=2&offset=1&sort=[['top', 'DESC'],['rating', 'DESC']]")
+      .post("/v2/issue")
+      .send({
+        title: "title",
+        body: "body",
+        userId: 2,
+        topicId: 3
+      })
       .end((err, res) => {
         const areEquals = equal(data.response.data, res.body.data);
-        res.should.have.status(200);
+        res.should.have.status(201);
         areEquals.should.be.equal(true);
         res.body.total.should.be.equal(data.response.total);
-        sinon.assert.calledOnce(findAll);
+        sinon.assert.calledOnce(create);
         done();
       });
   });

@@ -3,37 +3,37 @@ const { chai, chaiHttp, equal, sinon, server, Database, should }  = require("../
 
 chai.use(chaiHttp);
 
-const data = require("./mockData/deleteIssueComments.mock.json");
+const data  = require("./mockData/deleteIssue.mock.json");
 
-describe("Delete all isuse's comments", () => {
+describe("Delete issue", () => {
   let update;
   let findAll;
   let destroy;
 
   before((done) => {
-    findAll = sinon.stub(Database, "findAll").returns(new Promise(resolve => resolve({ count: 1, rows: [] })));
-    update = sinon.stub(Database, "update");
-    destroy = sinon.stub(Database, "destroy");
+    update = sinon.stub(Database, "update").returns(new Promise(resolve => resolve([1])));
+    findAll = sinon.stub(Database, "findAll").returns(new Promise(resolve => resolve({ rows: [] })));
+    destroy = sinon.stub(Database, "destroy").returns(new Promise(resolve => resolve(0)));
     done();
   });
 
   after((done) => {
-    findAll.restore();
     update.restore();
+    findAll.restore();
     destroy.restore();
     done();
   });
 
-  it("should return the id of the issue. /v2/issue/:issueId/comments DELETE", (done) => {
+  it("should return status 204 /v2/issue/:issueId DELETE", (done) => {
     chai.request(server)
-      .delete("/v2/issue/2/comments")
+      .delete("/v2/issue/1")
       .end((err, res) => {
         const areEquals = equal(data, res.body);
         res.should.have.status(204);
         areEquals.should.be.equal(true);
-        sinon.assert.calledOnce(findAll);
         sinon.assert.calledTwice(update);
-        sinon.assert.calledOnce(destroy);
+        sinon.assert.calledOnce(findAll);
+        sinon.assert.calledTwice(destroy);
         done();
       });
   });

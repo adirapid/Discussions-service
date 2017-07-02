@@ -18,24 +18,27 @@ module.exports = async function (req, res) {
   const { issueId, commentId } = req.params;
   try {
     const comment = await Database.findOne("Comments", { issueId, id: commentId, status: "active" });
-    if (typeof comment === "object") { // comment was found
+    if (comment) { // comment was found
       res.status(200).send({ data: comment, took: (Date.now() - startTime), total: 1 });
-    } else if (!comment) { // comment doesn't exists
+    } else { // comment doesn't exists
       const errResponse = getErrResponse({ status: 404,
         source: req.url,
         title: "Not Found",
         details: "comment doesn't exists" });
       res.status(404).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
       logger.error(`comment with id ${commentId} doesn't exists`);
-    } else { // err in db
-      const errResponse = getErrResponse({ status: 502, source: req.url, title: "Bad Gateway", details: comment });
-      res.status(502).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-      logger.error(`Bad gateway - error fetching db. req: ${req.url}`);
     }
   } catch (err) {
-    const errResponse = getErrResponse({ status: 500, source: req.url, title: "Server Error", details: err.message });
-    res.status(500).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-    logger.error(`Server Error: ${err.message}`);
+    if (err.name === "db error") {
+      err.message.source = req.url;
+      const errResponse = getErrResponse(err.message);
+      res.status(502).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
+      logger.error(`Bad gateway - error fetching db. req: ${req.url}`);
+    } else {
+      const errResponse = getErrResponse({ status: 500, source: req.url, title: "Server Error", details: err.message });
+      res.status(500).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
+      logger.error(`Server Error: ${err.message}`);
+    }
   }
 };
 

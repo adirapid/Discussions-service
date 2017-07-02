@@ -1,0 +1,30 @@
+{
+  "result":{
+    "rating": 0,
+    "commentsCount": 0,
+    "status": "active",
+    "id": 4,
+    "title": "title",
+    "body": "body",
+    "userId": "2",
+    "topicId": "3",
+    "updatedAt": "2017-06-29T13:50:17.284Z",
+    "createdAt": "2017-06-29T13:50:17.284Z"
+  },
+  "response": {
+    "data": {
+      "rating": 0,
+      "commentsCount": 0,
+      "status": "active",
+      "id": 4,
+      "title": "title",
+      "body": "body",
+      "userId": "2",
+      "topicId": "3",
+      "updatedAt": "2017-06-29T13:50:17.284Z",
+      "createdAt": "2017-06-29T13:50:17.284Z"
+    },
+    "took": 21,
+    "total": 1
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "result": {
+    "rows" :[
+      {
+        "id": 1,
+        "userId": 1,
+        "topicId": 1,
+        "title": "title2",
+        "body": "body2",
+        "rating": 0,
+        "commentsCount": 2,
+        "status": "active",
+        "createdAt": "2016-10-04T07:51:27.000Z",
+        "updatedAt": "2017-06-28T11:25:13.000Z",
+        "Comments": [
+          {
+            "id": 1,
+            "issueId": 1,
+            "userId": 5,
+            "body": "update comment test",
+            "top": false,
+            "rating": 0,
+            "status": "active",
+            "createdAt": "2017-05-14T08:31:29.000Z",
+            "updatedAt": "2017-06-28T13:37:46.000Z"
+          },
+          {
+            "id": 7,
+            "issueId": 1,
+            "userId": 8,
+            "body": "this is my comment",
+            "top": false,
+            "rating": 0,
+            "status": "deleted",
+            "createdAt": "2017-06-26T12:40:47.000Z",
+            "updatedAt": "2017-06-26T12:44:54.000Z"
+          },
+          {
+            "id": 10,
+            "issueId": 1,
+            "userId": 11,
+            "body": "this is my comment",
+            "top": false,
+            "rating": 0,
+            "status": "active",
+            "createdAt": "2017-06-28T11:25:13.000Z",
+            "updatedAt": "2017-06-28T13:08:00.000Z"
+          }
+        ]
+      }
+    ]
+  },
+  "response":{
+    "data": [
+      {
+        "id": 1,
+        "userId": 1,
+        "topicId": 1,
+        "title": "title2",
+        "body": "body2",
+        "rating": 0,
+        "commentsCount": 2,
+        "status": "active",
+        "createdAt": "2016-10-04T07:51:27.000Z",
+        "updatedAt": "2017-06-28T11:25:13.000Z",
+        "Comments": [
+          {
+            "id": 1,
+            "issueId": 1,
+            "userId": 5,
+            "body": "update comment test",
+            "top": false,
+            "rating": 0,
+            "status": "active",
+            "createdAt": "2017-05-14T08:31:29.000Z",
+            "updatedAt": "2017-06-28T13:37:46.000Z"
+          },
+          {
+            "id": 7,
+            "issueId": 1,
+            "userId": 8,
+            "body": "this is my comment",
+            "top": false,
+            "rating": 0,
+            "status": "deleted",
+            "createdAt": "2017-06-26T12:40:47.000Z",
+            "updatedAt": "2017-06-26T12:44:54.000Z"
+          },
+          {
+            "id": 10,
+            "issueId": 1,
+            "userId": 11,
+            "body": "this is my comment",
+            "top": false,
+            "rating": 0,
+            "status": "active",
+            "createdAt": "2017-06-28T11:25:13.000Z",
+            "updatedAt": "2017-06-28T13:08:00.000Z"
+          }
+        ]
+      }
+    ],
+    "total": 1,
+    "took": 3
+  }
+}

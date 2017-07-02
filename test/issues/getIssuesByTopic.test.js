@@ -3,9 +3,9 @@ const { chai, chaiHttp, equal, sinon, server, Database, should }  = require("../
 
 chai.use(chaiHttp);
 
-const data = require("./mockData/getIssueComments.mock.json");
+const data  = require("./mockData/getIssuesByTopic.mock.json");
 
-describe("GET Issue's comments", () => {
+describe("get Issues by topic id", () => {
   let findAll;
 
   before((done) => {
@@ -17,9 +17,10 @@ describe("GET Issue's comments", () => {
     findAll.restore();
     done();
   });
-  it("should return all issue comments /v2/issue/:issueId/comments GET", (done) => {
+
+  it("should return all topic's issues /v2/issues/topic/:topicId GET", (done) => {
     chai.request(server)
-      .get("/v2/issue/1/comments?limit=2&offset=1&sort=[['top', 'DESC'],['rating', 'DESC']]")
+      .get("/v2/issues/topic/2")
       .end((err, res) => {
         const areEquals = equal(data.response.data, res.body.data);
         res.should.have.status(200);

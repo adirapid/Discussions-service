@@ -1,34 +1,36 @@
 /**
- * @function setTopComment
- * @memberOf comments
- * @param issueId the issue id
- * @param commentId the comment id
- * @description set a comment to be top
- * <p><i> PATCH /issue/:issueId/topComment/:commentId </i></p>
- * @returns res contains the comment id.
+ * @function getIssue
+ * @memberOf issues
+ * @param issueId The issue id.
+ * @param order The order of the issue comments.
+ * @description get an issue by [issueId]
+ * <p><i> GET /v2/issue/:issueId </i></p>
+ * @returns res contains the issue and its comments info
  * <p></p>
  */
 
 const Database        = require("../../database");
 const getErrResponse  = require("../../utils/getErrResponse");
 const logger          = require("../../utils/logger");
+const models          = require("../../models");
 
 module.exports = async function (req, res) {
   const startTime = Date.now();
-  const { issueId, commentId } = req.params;
+  const { issueId } = req.params;
+  const { order } = req.query;
   try {
-    await Database.update("Comments", { issueId, status: "active" }, { top: false });
-    const update = await Database.update("Comments", { issueId, id: commentId, status: "active" }, { top: true });
-    if (update[0] > 0) { // updated top
-      res.status(204).send();
-    } else { // comment not found
+    const issue = await Database.findOne("Issues", { id: issueId },
+      [{ model: models.Comments, where: { status: "active" } }],
+      order, models.Comments);
+    if (issue) {
+      res.status(200).send({ data: issue, took: (Date.now() - startTime), total: 1 });
+    } else { // not issue
       const errResponse = getErrResponse({ status: 404,
         source: req.url,
         title: "Not Found",
-        details: "comment doesn't exists"
-      });
+        details: "issue doesn't exists" });
       res.status(404).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-      logger.error(`comment with id ${commentId} doesn't exists`);
+      logger.error(`issue with id ${issueId} and doesn't exists`);
     }
   } catch (err) {
     if (err.name === "db error") {
@@ -43,3 +45,4 @@ module.exports = async function (req, res) {
     }
   }
 };
+

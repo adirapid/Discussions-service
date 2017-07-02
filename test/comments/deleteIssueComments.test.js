@@ -32,7 +32,7 @@ describe("Delete all isuse's comments", () => {
         res.should.have.status(204);
         areEquals.should.be.equal(true);
         sinon.assert.calledOnce(findAll);
-        sinon.assert.calledOnce(update);
+        sinon.assert.calledTwice(update);
         sinon.assert.calledOnce(destroy);
         done();
       });

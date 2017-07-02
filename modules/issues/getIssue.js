@@ -19,15 +19,11 @@ module.exports = async function (req, res) {
   const { issueId } = req.params;
   const { order } = req.query;
   try {
-    const issue = await Database.findOne("Issues", { id: issueId }, [{ model: models.Comments }], order);
+    const issue = await Database.findOne("Issues", { id: issueId },
+      [{ model: models.Comments, where: { status: "active" } }],
+      order, models.Comments);
     if (issue) {
-      if (typeof issue === "object") { // issue was found
-        res.status(200).send({ data: issue, took: (Date.now() - startTime), total: 1 });
-      } else { // db error
-        const errResponse = getErrResponse({ status: 502, source: req.url, title: "Bad Gateway", details: issue });
-        res.status(502).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-        logger.error(`Bad gateway - error fetching db in update issue status. req: ${req.url}`);
-      }
+      res.status(200).send({ data: issue, took: (Date.now() - startTime), total: 1 });
     } else { // not issue
       const errResponse = getErrResponse({ status: 404,
         source: req.url,
@@ -37,9 +33,16 @@ module.exports = async function (req, res) {
       logger.error(`issue with id ${issueId} and doesn't exists`);
     }
   } catch (err) {
-    const errResponse = getErrResponse({ status: 500, source: req.url, title: "Server Error", details: err.message });
-    res.status(500).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-    logger.error(`Server Error: ${err.message}`);
+    if (err.name === "db error") {
+      err.message.source = req.url;
+      const errResponse = getErrResponse(err.message);
+      res.status(502).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
+      logger.error(`Bad gateway - error fetching db. req: ${req.url}`);
+    } else {
+      const errResponse = getErrResponse({ status: 500, source: req.url, title: "Server Error", details: err.message });
+      res.status(500).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
+      logger.error(`Server Error: ${err.message}`);
+    }
   }
 };
 

@@ -18,26 +18,27 @@ module.exports = async function (req, res) {
   const { commentId } = req.params;
   try {
     const update = await Database.update("Comments", { id: commentId, status: "active" }, { top: false });
-    if (typeof update === "object") {
-      if (update[0] > 0) { // comment was updated
-        res.status(204).send();
-      } else { // comment not found
-        const errResponse = getErrResponse({ status: 404,
-          source: req.url,
-          title: "Not Found",
-          details: "comment doesn't exists" });
-        res.status(404).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-        logger.error(`comment with id ${commentId} doesn't exists`);
-      }
-    } else { // db error
-      const errResponse = getErrResponse({ status: 502, source: req.url, title: "Bad Gateway", details: update });
-      res.status(502).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-      logger.error(`Bad gateway - error fetching db. req: ${req.url}`);
+    if (update[0] > 0) { // comment was updated
+      res.status(204).send();
+    } else { // comment not found
+      const errResponse = getErrResponse({ status: 404,
+        source: req.url,
+        title: "Not Found",
+        details: "comment doesn't exists" });
+      res.status(404).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
+      logger.error(`comment with id ${commentId} doesn't exists`);
     }
   } catch (err) {
-    const errResponse = getErrResponse({ status: 500, source: req.url, title: "Server Error", details: err.message });
-    res.status(500).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-    logger.error(`Server Error: ${err.message}`);
+    if (err.name === "db error") {
+      err.message.source = req.url;
+      const errResponse = getErrResponse(err.message);
+      res.status(502).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
+      logger.error(`Bad gateway - error fetching db. req: ${req.url}`);
+    } else {
+      const errResponse = getErrResponse({ status: 500, source: req.url, title: "Server Error", details: err.message });
+      res.status(500).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
+      logger.error(`Server Error: ${err.message}`);
+    }
   }
 };
 

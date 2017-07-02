@@ -19,17 +19,18 @@ module.exports = async function (req, res) {
   const { title, body, userId, topicId } = req.body;
   try {
     const issue = await Database.create("Issues", { title, body, userId, topicId });
-    if (typeof issue === "object") { // created
-      res.status(201).send({ data: issue, took: Date.now() - startTime, total: 1 });
-    } else { // db error
-      const errResponse = getErrResponse({ status: 502, source: req.url, title: "Bad Gateway", details: issue });
-      res.status(502).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-      logger.error(`Bad gateway - error fetching db in create new issue. req: ${req.url}`);
-    }
+    res.status(201).send({ data: issue, took: Date.now() - startTime, total: 1 });
   } catch (err) {
-    const errResponse = getErrResponse({ status: 500, source: req.url, title: "Server Error", details: err.message });
-    res.status(500).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
-    logger.error(`Server Error: ${err.message}`);
+    if (err.name === "db error") {
+      err.message.source = req.url;
+      const errResponse = getErrResponse(err.message);
+      res.status(502).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
+      logger.error(`Bad gateway - error fetching db. req: ${req.url}`);
+    } else {
+      const errResponse = getErrResponse({ status: 500, source: req.url, title: "Server Error", details: err.message });
+      res.status(500).send({ errors: [errResponse], total: 0, took: (Date.now() - startTime) });
+      logger.error(`Server Error: ${err.message}`);
+    }
   }
 };
 

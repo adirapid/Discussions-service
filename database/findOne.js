@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 const models    = require("../models");
 
 module.exports = async function (modelName, whereQuery, include = [], sort = []) {
@@ -10,6 +11,13 @@ module.exports = async function (modelName, whereQuery, include = [], sort = [])
     });
     return res;
   } catch (err) {
-    return err.message;
+    throw {
+      name: "db error",
+      message: {
+        status: 502,
+        title: "Bad Gateway",
+        details: `err in findOne: ${err.message}`
+      }
+    };
   }
 };

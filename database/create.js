@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 const models    = require("../models");
 
 module.exports = async function (modelName, rowData) {
@@ -6,6 +7,13 @@ module.exports = async function (modelName, rowData) {
     const res = await model.create(rowData);
     return res;
   } catch (err) {
-    return err.message;
+    throw {
+      name: "db error",
+      message: {
+        status: 502,
+        title: "Bad Gateway",
+        details: `err in create: ${err.message}`
+      }
+    };
   }
 };
